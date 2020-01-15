@@ -43,6 +43,7 @@ public:
         Emblem,
         Emote,
         International,
+        PantherX,
         Place,
         StatusIcon
     };
@@ -109,6 +110,7 @@ public:
             { QStringLiteral("Emotes"), KIconLoaderDummy::Emote },
             { QStringLiteral("MimeTypes"), KIconLoaderDummy::MimeType },
             { QStringLiteral("Places"), KIconLoaderDummy::Place },
+            { QStringLiteral("PantherX"), KIconLoaderDummy::PantherX },
             { QStringLiteral("Status"), KIconLoaderDummy::StatusIcon },
         };
         const auto value = hash.value(string, -1);
