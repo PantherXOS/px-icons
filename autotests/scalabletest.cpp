@@ -43,7 +43,6 @@ public:
         Emblem,
         Emote,
         International,
-        PantherX,
         Place,
         StatusIcon
     };
