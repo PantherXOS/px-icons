@@ -376,7 +376,7 @@ MaxSize=256
 #512x512 - Scalable
 [pantherx/512]
 Size=512
-Context=PantherX
+Context=Status
 Type=Scalable
 MinSize=64
 MaxSize=512

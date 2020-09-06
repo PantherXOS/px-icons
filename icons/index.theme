@@ -377,7 +377,7 @@ MaxSize=256
 #512x512 - Fixed size - For PantherX icons >!!!ONLY!!!<  Monochrome
 [pantherx/512]
 Size=512
-Context=PantherX
+Context=Status
 Type=Scalable
 MinSize=32
 MaxSize=512
