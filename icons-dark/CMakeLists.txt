@@ -21,7 +21,7 @@ if(NOT WIN32)
         add_dependencies(breeze-validate-svg breeze-generate-24px-versions-dark)
     endif()
     if(NOT SKIP_INSTALL_ICONS)
-        install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/generated/ DESTINATION ${BREEZE_INSTALL_DIR})
+        install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/generated/ DESTINATION ${PANTHERX_INSTALL_DIR})
     endif()
 endif()
 
