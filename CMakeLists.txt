@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(KF5_VERSION "5.66.0") # handled by release scripts
+set(KF5_VERSION "5.71.0") # handled by release scripts
 project(PantherXIcons VERSION ${KF5_VERSION})
+
+# Disallow in-source build
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+   message(FATAL_ERROR "Breeze Icons requires an out-of-source build. Please create a separate build directory and run 'cmake path_to_breeze_icons [options]' there.")
+endif()
 
 # ECM setup
 include(FeatureSummary)
-find_package(ECM 5.66.0  NO_MODULE)
+find_package(ECM 5.71.0  NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -39,6 +44,13 @@ function(generate_binary_resource target outfile)
     set(RESOURCE_FILE ${RESOURCES_WORKING_DIR}/pantherx-${target}.qrc)
     set(BINARY_RESOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/pantherx-${target}.rcc)
 
+    # Use $<IF:$<BOOL:${MSVC}>,PATH,LD_LIBRARY_PATH> instead of ${pathVarName} once CMake 3.8 is minimum
+    if(MSVC)
+        set(pathVarName PATH)
+    else()
+        set(pathVarName LD_LIBRARY_PATH)
+    endif()
+
     get_target_property(QT_RCC_EXECUTABLE Qt5::rcc LOCATION)
 
     add_custom_target(pantherx-${target}-mkdir
@@ -53,7 +65,7 @@ function(generate_binary_resource target outfile)
             ${RESOURCES_WORKING_DIR}/CMakeLists.txt
         COMMAND ${QT_RCC_EXECUTABLE} --project -o ${CMAKE_CURRENT_BINARY_DIR}/tmp.qrc
         COMMAND ${CMAKE_COMMAND} -E env
-            $<IF:$<BOOL:${MSVC}>,PATH,LD_LIBRARY_PATH>=$<TARGET_FILE_DIR:Qt5::Core>
+            ${pathVarName}=$<TARGET_FILE_DIR:Qt5::Core>
             $<TARGET_FILE:qrcAlias> -i ${CMAKE_CURRENT_BINARY_DIR}/tmp.qrc -o ${RESOURCE_FILE}
 
         WORKING_DIRECTORY ${RESOURCES_WORKING_DIR}
@@ -74,14 +86,22 @@ endfunction()
 endif()
 
 if(NOT WIN32)
+    # generate-24px in subdirs.
+    find_program(BASH_EXE bash)
+    add_feature_info("24x24 generation" BASH_EXE "'bash' is required to generate 24x24 variants")
+
+    # validate
     find_program(SH_EXE sh)
     find_program(XMLLINT_EXE xmllint)
     if(SH_EXE AND XMLLINT_EXE)
         file(GLOB_RECURSE SVGS "icons/*.svg")
         file(GLOB_RECURSE DARK_SVGS "icons-dark/*.svg")
+        # TODO: also make sure this is always run on generated icons
+        # not just by accident if the build directory is a subdir of the root source dir
         add_custom_target(pantherx-validate-svg ALL
-            COMMAND ${SH_EXE} ${CMAKE_SOURCE_DIR}/validate_svg.sh
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMENT "Validating SVG"
+            COMMAND ${SH_EXE} ${CMAKE_SOURCE_DIR}/validate_svg.sh ${CMAKE_CURRENT_SOURCE_DIR}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             SOURCES ${SVGS} ${DARK_SVGS}
         )
     endif()
