@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(KF5_VERSION "5.71.0") # handled by release scripts
+set(KF5_VERSION "5.70.0") # handled by release scripts
 project(PantherXIcons VERSION ${KF5_VERSION})
-
-# Disallow in-source build
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
-   message(FATAL_ERROR "Breeze Icons requires an out-of-source build. Please create a separate build directory and run 'cmake path_to_breeze_icons [options]' there.")
-endif()
 
 # ECM setup
 include(FeatureSummary)
-find_package(ECM 5.71.0  NO_MODULE)
+find_package(ECM 5.70.0  NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -98,7 +93,7 @@ if(NOT WIN32)
         file(GLOB_RECURSE DARK_SVGS "icons-dark/*.svg")
         # TODO: also make sure this is always run on generated icons
         # not just by accident if the build directory is a subdir of the root source dir
-        add_custom_target(pantherx-validate-svg ALL
+        add_custom_target(breeze-validate-svg ALL
             COMMENT "Validating SVG"
             COMMAND ${SH_EXE} ${CMAKE_SOURCE_DIR}/validate_svg.sh ${CMAKE_CURRENT_SOURCE_DIR}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
