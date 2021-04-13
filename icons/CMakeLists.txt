@@ -6,7 +6,7 @@ endif()
 
 set(breeze_icon_dirs
     actions animations applets apps categories preferences devices emblems
-    emotes mimetypes places status)
+    emotes mimetypes pantherx places status)
 
 set(BREEZE_INSTALL_DIR ${KDE_INSTALL_FULL_ICONDIR}/breeze)
 
