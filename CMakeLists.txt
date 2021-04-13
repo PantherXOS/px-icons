@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(KF5_VERSION "5.70.0") # handled by release scripts
-project(PantherXIcons VERSION ${KF5_VERSION})
+project(BreezeIcons VERSION ${KF5_VERSION})
 
 # ECM setup
 include(FeatureSummary)
@@ -26,7 +26,7 @@ else()
     set(BINARY_ICONS_RESOURCE_OPTION_DEFAULT ON)
 endif()
 
-option(BINARY_ICONS_RESOURCE "Install Qt binary resource files containing pantherx icons (pantherx-icons.rcc, pantherx-icons-dark.rcc)" ${BINARY_ICONS_RESOURCE_OPTION_DEFAULT})
+option(BINARY_ICONS_RESOURCE "Install Qt binary resource files containing breeze icons (breeze-icons.rcc, breeze-icons-dark.rcc)" ${BINARY_ICONS_RESOURCE_OPTION_DEFAULT})
 option(SKIP_INSTALL_ICONS "Skip installing the icons files" OFF)
 
 if(BINARY_ICONS_RESOURCE)
@@ -36,8 +36,8 @@ if(BINARY_ICONS_RESOURCE)
 
 function(generate_binary_resource target outfile)
     set(RESOURCES_WORKING_DIR ${CMAKE_CURRENT_BINARY_DIR}/res)
-    set(RESOURCE_FILE ${RESOURCES_WORKING_DIR}/pantherx-${target}.qrc)
-    set(BINARY_RESOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/pantherx-${target}.rcc)
+    set(RESOURCE_FILE ${RESOURCES_WORKING_DIR}/breeze-${target}.qrc)
+    set(BINARY_RESOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/breeze-${target}.rcc)
 
     # Use $<IF:$<BOOL:${MSVC}>,PATH,LD_LIBRARY_PATH> instead of ${pathVarName} once CMake 3.8 is minimum
     if(MSVC)
@@ -48,7 +48,7 @@ function(generate_binary_resource target outfile)
 
     get_target_property(QT_RCC_EXECUTABLE Qt5::rcc LOCATION)
 
-    add_custom_target(pantherx-${target}-mkdir
+    add_custom_target(breeze-${target}-mkdir
         COMMAND ${CMAKE_COMMAND} -E make_directory ${RESOURCES_WORKING_DIR}
     )
     add_custom_command(OUTPUT ${RESOURCE_FILE}
@@ -64,7 +64,7 @@ function(generate_binary_resource target outfile)
             $<TARGET_FILE:qrcAlias> -i ${CMAKE_CURRENT_BINARY_DIR}/tmp.qrc -o ${RESOURCE_FILE}
 
         WORKING_DIRECTORY ${RESOURCES_WORKING_DIR}
-        DEPENDS pantherx-${target}-mkdir
+        DEPENDS breeze-${target}-mkdir
     )
     add_custom_command(OUTPUT ${BINARY_RESOURCE_FILE}
         COMMAND ${QT_RCC_EXECUTABLE} --binary
@@ -74,7 +74,7 @@ function(generate_binary_resource target outfile)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-    add_custom_target(pantherx-${target}-rcc ALL DEPENDS ${BINARY_RESOURCE_FILE})
+    add_custom_target(breeze-${target}-rcc ALL DEPENDS ${BINARY_RESOURCE_FILE})
 
     set(${outfile} ${BINARY_RESOURCE_FILE} PARENT_SCOPE)
 endfunction()
